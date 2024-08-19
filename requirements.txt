@@ -1,5 +1,5 @@
 accelerate @ git+https://github.com/huggingface/accelerate.git@2471eacdd648446f2f63eccb9b18a7731304f401
-aiohttp==3.9.5
+aiohttp==3.10.2
 aiosignal==1.3.1
 annotated-types==0.7.0
 anyio==4.4.0
@@ -15,7 +15,7 @@ Babel==2.15.0
 beautifulsoup4==4.12.3
 bitsandbytes==0.43.1
 bleach==6.1.0
-certifi==2024.6.2
+certifi==2024.7.4
 cffi==1.16.0
 charset-normalizer==3.3.2
 click==8.1.7
@@ -111,7 +111,7 @@ nbformat==5.10.4
 nest-asyncio==1.6.0
 networkx==3.3
 nlp==0.4.0
-nltk==3.8.1
+nltk==3.9
 notebook==7.2.1
 notebook_shim==0.2.4
 numpy==1.26.4
@@ -173,7 +173,7 @@ scipy==1.14.0
 Send2Trash==1.8.3
 sentence-transformers==3.0.1
 sentencepiece==0.2.0
-sentry-sdk==2.7.1
+sentry-sdk==2.8.0
 setproctitle==1.3.3
 shtab==1.7.1
 six==1.16.0
