@@ -31,6 +31,7 @@ import re
 import json
 from bs4 import BeautifulSoup
 import filecmp
+from llama_index.core import Document
 
 def get_forums_data(forums_numbers, forums_directory_path_name, summarizer):
     """
@@ -188,7 +189,7 @@ def set_forums_data_2_json(forums_data, json_file_path_name, append):
         forums_data = get_forums_data("/home/projects/stage-cea-chatbot/data/forums/")
         set_forums_data_2_json(forums_data, "/home/projects/stage-cea-chatbot/data/json/forums.json", True)
     """
-    
+
     if append:
         # Vérifier si le fichier existe
         if os.path.exists(json_file_path_name):
@@ -215,3 +216,29 @@ def set_forums_data_2_json(forums_data, json_file_path_name, append):
 
     with open(json_file_path_name, 'w', encoding='utf-8') as file:
         json.dump(existing_forums_data, file, ensure_ascii=False, indent=4)
+
+def get_documents(json_file_path_names):
+    """
+    get_documents - Récupère les données de chaque forum présent dans un fichier JSON pour les mettre dans une liste d'objets de type Document.
+    """
+
+    documents = []
+
+    for json_file_path_name in json_file_path_names:
+        with open(json_file_path_name, 'r', encoding='utf-8') as f:
+            forum_informations = json.load(f)
+
+        #print(len(forum_informations["pages"]))
+
+        for page_informations in forum_informations["pages"]:
+            document = Document(text="Question: ")
+            try:
+                document.text = document.text + page_informations["summary"][0]["summary_text"] + "\n\nAnswer: "
+            except:
+                print("Exception at : {}".format(page_informations['number']))
+                continue
+            for answer in page_informations["discussion"][1:]:
+                document.text = document.text + answer
+            documents.append(document)
+
+    return documents
