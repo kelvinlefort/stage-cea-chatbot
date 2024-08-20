@@ -37,7 +37,7 @@ Dépendances: argparse, os, sys, transformers, forums
 
 Auteur: Kelvin LEFORT
 
-Date: 05/08/2024
+Date: 20/08/2024
 """
 
 import argparse
@@ -102,12 +102,6 @@ def main():
     # Récupérer les arguments
     args = get_arguments()
     
-    #print(f"--help:\n\t{args.help}\n")
-    #print(f"--forums_numbers:\n\t{args.forums_numbers}\n")
-    #print(f"--json_file_path_name:\n\t{args.json_file_path_name}\n")
-    #print(f"--forums_directory_path_name:\n\t{args.forums_directory_path_name}")
-    
-    
     # ==================== Gestion des arguments ====================
     if args.help:
         print_help()
@@ -118,7 +112,9 @@ def main():
     if args.forums_directory_path_name == None:
         print("Erreur: L'argument --forums_directory_path_name est obligatoire") # TODO : À MODIFIER
         sys.exit(0)
-    
+
+    # nombre max de token: max_length=150
+    # nombre min de token: min_length=20
     summarizer = pipeline("summarization")
 
     # Récupérer les données des forums

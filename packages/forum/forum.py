@@ -1,24 +1,22 @@
 """
-Nom du module: forums.py
+Nom du module: forum.py
 
-Description: Ce module permet de récupérer/manipuler/modifier les données "essentielles" des forums de la plateforme SALOME pour pouvoir ensuite les placer dans un fichier JSON.
+Description: Ce module permet de récupérer/manipuler/modifier les données "essentielles" d'un forum de la plateforme SALOME pour pouvoir ensuite les placer dans un fichier JSON.
              J'entends par "essentielle" :
                      - Une page qui contient au moins deux chaats, c'est-à-dire de manière générale qu'il y a au moins une réponse à la question.
 
 Informations:
-	- Il y six forums : forum_9, forum_10, forum_11, forum_12, forum_13 et forum_14.
 	- Chaque forum possède plusieurs pages, identifiées par un nombre entier. Par exemple, dans forum_9, il y a la page numéro 7203642.
 	- Chaque page contient un titre et une discussion entre plusieurs personnes. L'objectif de cette discussion est de répondre à la question d'un utilisateur.
 	- Voici l'arborescence du fichier JSON qu'on souhaite produire :
 	
-	    "forums" (list) : La liste de chaque forum (dict) :
-	            "number" (int) : Le numéro du forum
-	            "pages" (list) : La liste de chaque page "essentielle" du forum (dict) :
-	                    "path" (str) : Le nom du chemin vers la page
-	                    "number" (int) : Le numéro de la page
-	                    "title" (str) : Le titre de la page
-	                    "discussion" (list) : La liste de chaque chat (str) dans la discussion
-	                    "summary" (list) : La liste correspondant au résumé de la première question
+	        "number" (int) : Le numéro du forum
+	        "pages" (list) : La liste de chaque page "essentielle" du forum (dict) :
+	                "path" (str) : Le nom du chemin vers la page
+	                "number" (int) : Le numéro de la page
+	                "title" (str) : Le titre de la page
+	                "discussion" (list) : La liste de chaque chat (str) dans la discussion
+	                "summary" (list) : La liste correspondant au résumé de la première question
 
 Dépendances: os, re, json, bs4, filecmp
 
@@ -32,56 +30,19 @@ import re
 import json
 from bs4 import BeautifulSoup
 import filecmp
-from llama_index.core import Document
 
-def get_forums_data(forums_numbers, forums_directory_path_name, summarizer):
+def get_forum_data(forum_directory_path_name, summarizer):
     """
-    get_forums_data - Récupère les données "essentielles" des forums de la plateforme SALOME.
-
-    Argument:
-        forums_numbers (list): La liste des numéros des forums qu'on considère. 
-        forums_directory_path_name (str): Le nom du chemin vers le répertoire où se trouve les données "essentielles" des forums de la plateforme SALOME.
-        summarizer: L'objet permettant de résumer les questions.
-    
-    Sortie:
-        forums_data (dict): Les données "essentielles" des forums de la plateforme SALOME. Elles ont le même format que les données dans le fichiern JSON forums.json.
-    
-    Exemple:
-        forums_data = get_forums_data([9, 10], "/home/projects/stage-cea-chatbot/data/forums/")
-    """
-
-    # Définir le pattern indiquant que seules les chaînes de caractères contenant que des chiffres sont pris en compte
-    pattern = re.compile(r'^\d+$')
-
-    # Déclarer les données des forums comme un dictionnaire vide
-    forums_data = {}
-
-    # Déclarer le champ "forums" de data comme une liste vide
-    forums_data["forums"] = []
-
-    # ==================== Récupération des informations de chaque forum ====================
-    for forum_number in forums_numbers:
-        forum_informations = get_forum_informations(forum_number, forums_directory_path_name, pattern, summarizer)
-        
-        # Ajouter les informations du forum en fin de liste de data["forums"]
-        forums_data["forums"].append(forum_informations)
-
-    return forums_data
-
-def get_forum_informations(forum_number, forums_directory_path_name, pattern, summarizer):
-    """
-    get_forum_informations - Récupère les informations "essentielles" d'un seul forum de la plateforme SALOME.
+    get_forum_data - Récupère les informations "essentielles" d'un seul forum de la plateforme SALOME.
 
     Arguments:
-        forum_number (int): Le numéro du forum.
-        forums_directory_path_name (str): Le nom du chemin vers le répertoire où se trouve les données "essentielles" des forums de la plateforme SALOME.
-        pattern (re.Pattern): Le pattern pour sélectionner que certains sous-répertoires (pages) du forum.
+        forum_directory_path_name (str): Le nom du chemin vers le répertoire où se trouve les données "essentielles" des forums de la plateforme SALOME.
         summarizer: L'objet permettant de résumer les questions.
     
     Sortie:
         forum_informations (dict): Les informations "essentielles" du forum. Elles ont le format suivant :
 
-            "number" (int) : Le numéro du forum,
+            "name" (int) : Le numéro du forum,
             "pages" (list) : La liste de chaque page du forum (dict) :
                     "path" (str) : Le nom du chemin vers la page
                     "number" (int) : Le numéro de la page,
@@ -97,19 +58,17 @@ def get_forum_informations(forum_number, forums_directory_path_name, pattern, su
     forum_informations = {}
 
     # Écrire le numéro du forum dans le champ "number" de forum_informations
-    forum_informations["number"] = forum_number
+    forum_informations["name"] = forum_directory_path_name
 
     # Déclarer le champ "pages" de forum_informations comme une liste vide
     forum_informations["pages"] = []
 
-    # Déterminer le chemin vers le répertoire où se trouve les données de ce forum
-    forum_directory_path_name = os.path.join(forums_directory_path_name, f"forum_{forum_number}")
-
     # Déterminer le nom des sous-répertoires où se trouvent les données de chaque page de ce forum
-    pages_number = [name for name in os.listdir(forum_directory_path_name) if os.path.isdir(os.path.join(forum_directory_path_name, name)) and pattern.match(name)]
+    pages_number = [name for name in os.listdir(forum_directory_path_name) if os.path.isdir(os.path.join(forum_directory_path_name, name))]
 
     # ==================== Récupération des informations de chaque page du forum ====================
     for page_number in pages_number:
+        print("=> page HTML ", page_number)
         page_informations = get_page_informations(page_number, forum_directory_path_name, summarizer)
 
         if page_informations:
@@ -162,7 +121,7 @@ def get_page_informations(page_number, forum_directory_path_name, summarizer):
         doc = BeautifulSoup(f, "html.parser")
     
     # Écrire le numéro de la page dans le champ "number" de page_informations
-    page_informations["number"] = int(page_number)
+    page_informations["number"] = page_number
 
     # Écrire le titre de la page dans le champ "title" de page_informations
     page_informations["title"] = doc.title.string
@@ -184,69 +143,43 @@ def get_page_informations(page_number, forum_directory_path_name, summarizer):
             page_informations["summary"] = "FATAL: Exception raised while calling pipeline"
     return page_informations
 
-def set_forums_data_2_json(forums_data, json_file_path_name, append):
+def set_forum_data_2_json(forum_data, json_file_path_name, append):
     """
-    set_forums_data_2_json - Écrit les données des forums dans un fichier JSON.
+    set_forum_data_2_json - Écrit les données des forums dans un fichier JSON.
 
     Arguments:
-        forums_data (dict): Les données des forums (voir la fonction get_forums_data pour le format).
+        forum_data (dict): Les données des forums (voir la fonction get_forum_data pour le format).
         json_file_path_name (str): Le nom du chemin vers le fichier JSON.
         append (bool): Indique que les données des forums seront ajoutées au fichier JSON, et ils n'écraseront donc pas les données existantes. Si le fichier JSON n'existe pas, il sera créé.
     
     Exemple:
-        forums_data = get_forums_data("/home/projects/stage-cea-chatbot/data/forums/")
-        set_forums_data_2_json(forums_data, "/home/projects/stage-cea-chatbot/data/json/forums.json", True)
+        forum_data = get_forum_data("/home/projects/stage-cea-chatbot/data/forums/")
+        set_forum_data_2_json(forum_data, "/home/projects/stage-cea-chatbot/data/json/forums.json", True)
     """
-
+    
     if append:
         # Vérifier si le fichier existe
         if os.path.exists(json_file_path_name):
             # Lire les données existantes du fichier JSON
             with open(json_file_path_name, 'r') as file:
-                existing_forums_data = json.load(file)
+                existing_forum_data = json.load(file)
         else:
             # Initialiser les données si le fichier n'existe pas
-            existing_forums_data = {"forums": []}
-        for forum_informations in forums_data["forums"]:
+            existing_forum_data = {"forums": []}
+        for forum_informations in forum_data["forums"]:
             forum_found = False
-            for existing_forum_informations in existing_forums_data["forums"]:
+            for existing_forum_informations in existing_forum_data["forums"]:
                 if forum_informations["number"] == existing_forum_informations["number"]:
                     forum_found = True
                     break
             if not forum_found:
-                existing_forums_data["forums"].append(forum_informations)
+                existing_forum_data["forums"].append(forum_informations)
             else:
                 for page_informations in forum_informations["pages"]:
                     if page_informations["number"] not in [existing_page_informations["number"] for existing_page_informations in existing_forum_informations["pages"]]:
                         existing_forum_informations["pages"].append(page_informations)
     else:
-        existing_forums_data = forums_data
+        existing_forum_data = forum_data
 
     with open(json_file_path_name, 'w', encoding='utf-8') as file:
-        json.dump(existing_forums_data, file, ensure_ascii=False, indent=4)
-
-def get_documents(json_file_path_names):
-    """
-    get_documents - Récupère les données de chaque forum présent dans un fichier JSON pour les mettre dans une liste d'objets de type Document.
-    """
-
-    documents = []
-
-    for json_file_path_name in json_file_path_names:
-        with open(json_file_path_name, 'r', encoding='utf-8') as f:
-            forum_informations = json.load(f)
-
-        #print(len(forum_informations["pages"]))
-
-        for page_informations in forum_informations["pages"]:
-            document = Document(text="Question: ")
-            try:
-                document.text = document.text + page_informations["summary"][0]["summary_text"] + "\n\nAnswer: "
-            except:
-                print("Exception at : {}".format(page_informations['number']))
-                continue
-            for answer in page_informations["discussion"][1:]:
-                document.text = document.text + answer
-            documents.append(document)
-
-    return documents
+        json.dump(existing_forum_data, file, ensure_ascii=False, indent=4)

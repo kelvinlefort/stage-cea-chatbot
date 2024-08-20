@@ -58,8 +58,8 @@ Pour lancer JupyterLab (pour exécuter/éditer les fichiers NOTEBOOK), tapez la 
 
 L'exécution d'un script Python dépend des arguments et options qu'il attend. Deux options sont possibles :
 
-- Le script n'attend aucuns arguments et aucunes options. Il suffit dans ce cas de taper la commande : `python chemin_vers_le_script`
-- Le script attend un/des argument(s) et/ou une/des option(s). Le cas échéant, pour trouver les informations nécessaires à l'exécution du script, tapez la commande : `python chemin_vers_le_script --help`
+- Le script n'attend aucuns arguments et aucunes options. Il suffit dans ce cas de taper la commande : `python script_path_name`
+- Le script attend un/des argument(s) et/ou une/des option(s). Le cas échéant, pour trouver les informations nécessaires à l'exécution du script, tapez la commande : `python script_path_name --help`
 
 ## Structure
 
