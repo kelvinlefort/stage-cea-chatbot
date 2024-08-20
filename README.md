@@ -26,9 +26,12 @@ Avant de commencer les installations, je tiens à préciser que l'environnement 
 
 Voici les étapes à suivre pour installer un environnement virtuel Python :
 
-1. Créez (si ce n'est pas déjà fait) un répertoire `envs` dans le répertoire personnel : `mkdir $HOME/envs`
-2. Déplacez-vous dans ce répertoire : `cd $HOME/envs`
-3. Installez l'environnement virtuel Python dans ce répertoire : `python -m venv stage-cea-chatbot`
+1. Créez un répertoire `envs` dans le répertoire personnel :
+   ```bash
+   mkdir -p $HOME/envs
+   ```
+3. Déplacez-vous dans ce répertoire : `cd $HOME/envs`
+4. Installez l'environnement virtuel Python dans ce répertoire : `python -m venv stage-cea-chatbot`
 
 Voici les étapes à suivre pour activer/désactiver l'environnement :
 
