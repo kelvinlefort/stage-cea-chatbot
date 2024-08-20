@@ -1,3 +1,7 @@
 .ipynb_checkpoints
 data/forums/
 **/__pycache__/
+models/*
+!models/.gitkeep
+notebooks/test_trainer/
+notebooks/wandb/
