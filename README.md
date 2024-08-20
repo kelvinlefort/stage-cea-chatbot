@@ -4,32 +4,36 @@ Stage-CEA-ChatBot est le rendu de mon stage au CEA. J'ai utilisé le langage Pyt
 
 ## Table des matières
 
-- [Informations générales](##informations-générales)
+- [Informations générales](#informations-générales)
+- [Dépendances](#dépendances)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Structure](#structure)
-- [Explication](#explication)
 - [À Faire](#à-faire)
 - [Auteur](#auteur)
 
 ## Informations générales
 
-- **Date de création**: 26 juin 2024
-- **Auteur**: Kelvin LEFORT
-- **Sujet**: Explorer les possibilités de mettre en place un bot IA local, entraîné pour répondre aux questions autour de la plateforme SALOME
-- **Version**: 1.0.0
-- **Nom du système d'exploitation utilisé pendant le stage**: Ubuntu 22.04.4 LTS
+- **Date de création** : 26 juin 2024
+- **Auteur** : Kelvin LEFORT
+- **Sujet** : Explorer les possibilités de mettre en place un bot IA local, entraîné pour répondre aux questions autour de la plateforme SALOME
+- **Version** : 1.0.0
+- **Nom du système d'exploitation utilisé pendant le stage** : Ubuntu 22.04.4 LTS
 
-## Dependencies
+## Dépendances
+
+Voici la liste des dépendances :
+
 - [python3](https://www.python.org/downloads/)
 - [python3-venv](https://docs.python.org/3/library/venv.html)
 - [pip](https://pypi.org/project/pip/)
 
 ## Installation
 
-Avant de commencer les installations, je tiens à préciser que l'environnement virtuel Python devra rester activé tout au long de l'utilisation du projet. Il pourra être désactivé seulement quand vous souhaitez arrêter d'utiliser mon projet.
+Avant de commencer les installations, je tiens à préciser que l'environnement virtuel Python devra être activé et le rester tout au long de l'utilisation du projet. Il pourra être désactivé seulement quand vous souhaiterez arrêter d'utiliser mon projet.
 
-#### Clone the repository from Git 
+#### Cloner le dépôt à partir de Git
+
 ```bash
 git clone https://github.com/dovinzo/stage-cea-chatbot.git $HOME/stage-cea-chatbot
 ```
@@ -48,62 +52,62 @@ git clone https://github.com/dovinzo/stage-cea-chatbot.git $HOME/stage-cea-chatb
    ```bash
    python -m venv stage-cea-chatbot
    ```
-   verify with `ls` that a folder `stage-cea-chatbot` is created in `cd $HOME/envs`
+   **Note** : Vérifier, en utilisant la commande `ls`, que le sous-répertoire `stage-cea-chatbot` a bien été créé dans le répertoire `$HOME/envs`.
 
 #### Activer l'environnement
 
-1. Pour activer l'environnement (à effectuer une seule fois au début de chaque session quand vous souhaitez utiliser mon projet) :
+1. Pour activer l'environnement :
    ```bash
    source $HOME/envs/stage-cea-chatbot/bin/activate
-   ````
-   you can verify that the envirnoment was activated by checking which `python` is used via `which python`, it should return the python from `$HOME/envs/stage-cea-chatbot/bin/python`
-   
-**Note** Pour désactiver l'environnement (à réaliser seulement lorsque vous souhaitez arrêter d'utiliser mon projet) :
+   ```
+   **Note** : Pour vérifier que l'environnement est bien activé, tapez la commande `which python`. Cette commande permet de vérifier quel programme binaire `python` est utilisé lorsqu'on tape la commande `python`. Elle devrait donc retourner le `python` de `$HOME/envs/stage-cea-chatbot/bin/python`.
+
+**Note** : Pour désactiver l'environnement :
    ```bash
    deactivate
    ```
 
-#### Installer les dépendances nécessaires :
+#### Installer les dépendances nécessaires
 
 1. Installez toutes les dépendances nécessaires à partir du fichier `requirements.txt` :
    ```bash
    pip install -r $HOME/stage-cea-chatbot/requirements.txt
    ```
 
-#### Installer Jupyter dans l'environnement :
+#### Installer Jupyter dans l'environnement
 
 1. Installez Jupyter dans l'environnement :
    ```bash
    pip install jupyter
    ```
-**Note** Vérifiez que Jupyter est bien installé dans l'environnement :
-   ```bash
-   which jupyter
-   ```
-if it is not, please always launch `$HOME/envs/stage-cea-chatbot/bin/jupyter` instead of `jupyter`
+   **Note** : Pour vérifier que Jupyter est bien installé dans l'environnement, tapez la commande `which jupyter`. Si le résultat de cette commande n'est pas `$HOME/envs/stage-cea-chatbot/bin/jupyter`, veuillez toujours lancer `$HOME/envs/stage-cea-chatbot/bin/jupyter` au lieu de `jupyter`.
 
-#### Installer IPython Kernel for Jupyter dans l'environnement :
+#### Installer IPython Kernel for Jupyter dans l'environnement
 
 1. Installez IPython Kernel for Jupyter dans l'environnement :
    ```bash
    pip install ipykernel
    ```
 
-#### Installer un noyau IPython (kernel) pour Jupyter Notebook avec un nom personnalisé et un affichage spécifique :
+#### Installer un noyau IPython pour Jupyter Notebook
 
-1. Tapez la commande suivante :
+1. Installez un noyau IPython (kernel) pour Jupyter Notebook avec un nom personnalisé et un affichage spécifique :
    ```bash
    python -m ipykernel install --user --name=stage-cea-chatbot --display-name "Python (stage-cea-chatbot)"
    ```
 
 ## Usage
 
-Pour lancer JupyterLab (pour exécuter/éditer les fichiers NOTEBOOK), tapez la commande suivante : 
-```bash
-cd $HOME/stage-cea-chatbot && /
-jupyter lab
-```
-All the notebooks are contained in the folder `$HOME/stage-cea-chatbot/notebooks` these can then be lauched from `jupyter`
+#### Utiliser les fichiers NOTEBOOK
+
+1. Lancez JupyterLab :
+   ```bash
+   cd $HOME/stage-cea-chatbot && /
+   jupyter lab
+   ```
+   **Note** : Tous les fichiers NOTEBOOK sont contenus dans le répertoire `$HOME/stage-cea-chatbot/notebooks`. Ceux-ci peuvent alors être lancés à partir de JupyterLab.
+
+#### Utiliser les scripts Python
 
 L'exécution d'un script Python dépend des arguments et options qu'il attend. Deux options sont possibles :
 
@@ -120,15 +124,11 @@ L'exécution d'un script Python dépend des arguments et options qu'il attend. D
 
 Pour mieux travailler, j'ai structuré intelligemment mon répertoire de travail. Voici l'explication de cette structure :
 
-- **`data/`**: Contient tous les fichiers de données (JSON et JSON Lines).
-- **`models/`**: Contient les sauvegardes des modèles.
-- **`notebooks`**: Contient tous les fichiers NOTEBOOK réalisés/utilisés pendant le stage.
-- **`packages`**: Contient les packages Python créés et développés durant le stage.
-- **`scripts`**: Contient tous les scripts Python réalisés/utilisés pendant le stage.
-
-## Explication
-
-Donnons à présent une explication détaillée de chaque fichier :
+- **`data/`** : Contient tous les fichiers de données (JSON et JSON Lines).
+- **`models/`** : Contient les sauvegardes des modèles.
+- **`notebooks`** : Contient tous les fichiers NOTEBOOK réalisés/utilisés pendant le stage.
+- **`packages`** : Contient les packages Python créés et développés durant le stage.
+- **`scripts`** : Contient tous les scripts Python réalisés/utilisés pendant le stage.
 
 ## À Faire
 
